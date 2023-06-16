@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Online_Store_ASP.NET_Core_MVC.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -11,9 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Connect to Sql Server (ConnectionStrings) :
 // 1 Way : ConnectionStrings
-// builder.Services.AddDbContext<DbContext>(x => x.UseSqlServer("Server=.;Database=Online_Store-ASP.NET_Core_MVC;User Id=MahdiTaremi;Password=12;TrustServerCertificate=True;"));
+// builder.Services.AddDbContext<DbContextProject>(x => x.UseSqlServer("Server=.;Database=Online_Store-ASP.NET_Core_MVC;User Id=MahdiTaremi;Password=12;TrustServerCertificate=True;"));
 // 2 Way : ConnectionStrings
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<DbContextProject>(options =>
 {
     var ConnectionStrings = builder.Configuration.GetConnectionString("Local");
     options.UseSqlServer(ConnectionStrings);
@@ -21,7 +22,7 @@ builder.Services.AddDbContext<DbContext>(options =>
 
 // Add Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<DbContext>()
+    .AddEntityFrameworkStores<DbContextProject>()
     .AddDefaultTokenProviders();
 
 // Config Identity
