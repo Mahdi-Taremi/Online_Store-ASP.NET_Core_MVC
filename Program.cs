@@ -31,6 +31,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 3;
+    options.Password.RequireDigit = false;
 });
 
 // Add Auth and Jwt
