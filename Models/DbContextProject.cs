@@ -8,5 +8,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Models
         public DbContextProject(DbContextOptions<DbContextProject> options) : base(options)
         {
         }
+        public DbSet<Models.Product> Product { get; set; } = default!;
     }
 }

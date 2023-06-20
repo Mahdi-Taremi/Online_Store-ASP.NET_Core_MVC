@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Online_Store_ASP.NET_Core_MVC.Models;
 
@@ -11,9 +12,11 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     [DbContext(typeof(DbContextProject))]
-    partial class DbContextProjectModelSnapshot : ModelSnapshot
+    [Migration("20230620150222_Add-Product3")]
+    partial class AddProduct3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,6 +252,9 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -261,6 +267,9 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("pic_1")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
