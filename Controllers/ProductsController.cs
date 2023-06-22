@@ -102,7 +102,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             return NoContent();
         }
 
-        [HttpPost("UploadImage")]
+        /*[HttpPost("UploadImage")]
         public async Task<ActionResult> UploadImage()
         {
             bool Result = false;
@@ -137,9 +137,9 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
 
             return Ok(Result);  
 
-        }
+        }*/
 
-        [NonAction]
+        /*[NonAction]
         private string GetFilePath(string ProductCode)
         {
             return _webHostEnvironment.WebRootPath + "\\Uploads\\Product" + ProductCode;
@@ -161,21 +161,32 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
                 ImagePath = HostURL + "/Uploads/Product/" + ProductCode + "/image.png";
             }
             return ImageURL;
-        }
+        }*/
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+
+       // public async Task<ActionResult<Product>> PostProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
+        //public IActionResult PostProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
+        [HttpPost("CreateProduct")]
+        public IActionResult CreateProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
         {
           if (_context.Product == null)
           {
-              return Problem("Entity set 'DbContextProject.Product'  is null.");
+              return Problem("DbContextProject.Product  is null.");
           }
-            _context.Product.Add(product);
-            await _context.SaveChangesAsync();
+            var FilePath = Path.Combine(env.WebRootPath, "Uploads", f.UploadFile.FileName);
+            using (var img = System.IO.File.Create(FilePath))
+            {
+                f.UploadFile.CopyTo(img);
+            }
+            f.pic_1 = f.UploadFile.FileName;
+            _context.Product.Add(f);
+            _context.SaveChanges();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            //await _context.SaveChangesAsync();
+            return Ok("Add Product");
+            //return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
         // DELETE: api/Products/5

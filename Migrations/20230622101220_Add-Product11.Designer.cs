@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Online_Store_ASP.NET_Core_MVC.Models;
 
@@ -11,9 +12,11 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     [DbContext(typeof(DbContextProject))]
-    partial class DbContextProjectModelSnapshot : ModelSnapshot
+    [Migration("20230622101220_Add-Product11")]
+    partial class AddProduct11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,6 +223,24 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Basket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BasketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BasketId");
+
+                    b.ToTable("Basket");
+                });
+
             modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -243,9 +264,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
-
-                    b.Property<string>("pic_1")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -301,6 +319,20 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Basket", b =>
+                {
+                    b.HasOne("Online_Store_ASP.NET_Core_MVC.Models.Product", null)
+                        .WithMany("IdBasket")
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Product", b =>
+                {
+                    b.Navigation("IdBasket");
                 });
 #pragma warning restore 612, 618
         }
