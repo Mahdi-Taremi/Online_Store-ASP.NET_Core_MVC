@@ -173,7 +173,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         {
           if (_context.Product == null)
           {
-              return Problem("DbContextProject.Product  is null.");
+              return Problem("DbContextProject.Product is null.");
           }
             var FilePath = Path.Combine(env.WebRootPath, "Uploads", f.UploadFile.FileName);
             using (var img = System.IO.File.Create(FilePath))

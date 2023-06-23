@@ -26,7 +26,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Models
         public IFormFile? UploadFile { get; set; }
         //public DateTime Date { get; set; }
         public string? Description { get; set; }
-        //[ForeignKey("BasketId")]
-        //public ICollection<Basket> IdBasket { get; set; }
+        [ForeignKey("BasketId")]
+        public ICollection<Basket> IdBasket { get; set; }
     }
 }
