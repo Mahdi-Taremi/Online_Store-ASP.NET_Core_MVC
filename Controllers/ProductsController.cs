@@ -54,7 +54,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         //}
 
         // GET: api/Products/5
-        [HttpGet("{id}")]
+        /* [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
           if (_context.Product == null)
@@ -69,11 +69,11 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             }
 
             return product;
-        }
+        }*/
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
             if (id != product.Id)
@@ -100,7 +100,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             }
 
             return NoContent();
-        }
+        }*/
 
         /*[HttpPost("UploadImage")]
         public async Task<ActionResult> UploadImage()
@@ -190,7 +190,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }
 
         // DELETE: api/Products/5
-        [HttpDelete("{id}")]
+        /*[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             if (_context.Product == null)
@@ -207,7 +207,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
+        }*/
 
         private bool ProductExists(int id)
         {

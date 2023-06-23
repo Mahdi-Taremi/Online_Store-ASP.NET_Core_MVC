@@ -46,28 +46,28 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }
 
         // GET api/<TestController>/5
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
-        }
+        }*/
 
         // POST api/<TestController>
-        [HttpPost]
+       /* [HttpPost]
         public void Post([FromBody] string value)
         {
-        }
+        }*/
 
         // PUT api/<TestController>/5
-        [HttpPut("{id}")]
+       /* [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-        }
+        }*/
 
         // DELETE api/<TestController>/5
-        [HttpDelete("{id}")]
+       /* [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
+        }*/
     }
 }

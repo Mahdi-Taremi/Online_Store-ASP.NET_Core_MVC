@@ -1,38 +1,22 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Online_Store_ASP.NET_Core_MVC.Models;
+using System.Data;
 
 namespace Online_Store_ASP.NET_Core_MVC.Controllers
 {
-    public class CreateProductsController : Controller
+    
+    public class ShopController : Controller
     {
         private readonly DbContextProject _context;
-        public CreateProductsController(DbContextProject context)
+        public ShopController(DbContextProject context)
         {
             _context = context;
         }
 
-        // GET: CreateProductsController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: CreateProductsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: CreateProductsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CreateProductsController/Create
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public ActionResult Create(IFormCollection collection)
@@ -47,6 +31,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         // }
         // }
         [HttpPost("CreateProduct")]
+        [Authorize(Roles = UsersRoles.ADMIN)]
         public IActionResult CreateProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
         {
             if (_context.Product == null)
@@ -67,18 +52,19 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             //return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
-        // GET: CreateProductsController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: CreateProductsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+    
+        //[ValidateAntiForgeryToken]
+        [HttpDelete("DeleteProduct")]
+        [Authorize(Roles = UsersRoles.ADMIN)]
+        public ActionResult Delete(int id, IFormCollection collection)
         {
-            try
+            var query = _context.Product.Where(x => x.Id == id).SingleOrDefault();
+            _context.Product.Remove(query);
+            _context.SaveChanges();
+            return Ok("Delete Product");
+
+            /* try
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -86,18 +72,43 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             {
                 return View();
             }
+            */
         }
 
-        // GET: CreateProductsController/Delete/5
-        public ActionResult Delete(int id)
+        // Test
+        //[ValidateAntiForgeryToken]
+        [HttpPost("BuyProduct")]
+        [Authorize(Roles = UsersRoles.USER)]
+        public string BuyProduct(int id)
         {
-            return View();
+            var query = _context.Product.Where(x => x.Id == id).SingleOrDefault();
+            if (query == null)
+            {
+                return "UnSuccessfull Add To Basket";
+            }
+            else
+            {
+                Basket basketdb = new Basket();
+                basketdb.BasketId = id;
+                _context.Basket.Add(basketdb);
+                _context.SaveChanges();
+                var pCount = basketdb.BasketId;
+                var bCount = _context.Basket.Count();
+                return "Successfull Add product to Basket" + " " + pCount.ToString() + " " + "and Count Basket" + " " + bCount.ToString();
+            }
         }
 
-        // POST: CreateProductsController/Delete/5
+
+
+
+
+
+
+
+        // POST: CreateProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {

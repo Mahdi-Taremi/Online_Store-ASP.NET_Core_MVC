@@ -1,4 +1,4 @@
-﻿using Online_Store_ASP.NET_Core_MVC.Migrations;
+﻿using Online_Store_ASP.NET_Core_MVC;
 
 namespace Online_Store_ASP.NET_Core_MVC.Entity
 {
