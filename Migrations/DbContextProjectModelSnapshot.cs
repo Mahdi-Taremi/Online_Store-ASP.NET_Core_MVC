@@ -238,36 +238,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                     b.ToTable("Basket");
                 });
 
-            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.CartDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartDetailId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PrductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CartDetail");
-                });
-
             modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -360,21 +330,8 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.CartDetail", b =>
-                {
-                    b.HasOne("Online_Store_ASP.NET_Core_MVC.Models.Product", "Product")
-                        .WithMany("CartDetail")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Product", b =>
                 {
-                    b.Navigation("CartDetail");
-
                     b.Navigation("IdBasket");
                 });
 #pragma warning restore 612, 618

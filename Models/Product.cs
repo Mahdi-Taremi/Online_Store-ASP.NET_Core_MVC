@@ -29,6 +29,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Models
         [ForeignKey("BasketId")]
         public ICollection<Basket> IdBasket { get; set; }
 
-        public List<CartDetail> CartDetail { get; set; }
+        //public List<CartDetail> CartDetail { get; set; }
     }
 }

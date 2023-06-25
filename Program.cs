@@ -75,6 +75,9 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// Add the repository as a service.
+//builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 // 2. Add Swagger 
 app.UseSwaggerUI();
 

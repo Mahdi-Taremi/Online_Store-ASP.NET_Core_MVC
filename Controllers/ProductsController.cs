@@ -16,41 +16,45 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
     {
         private readonly DbContextProject _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(DbContextProject context, IWebHostEnvironment webHostEnvironment)
+
+        public ProductsController(DbContextProject context, IWebHostEnvironment webHostEnvironment, IProductRepository productRepository)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;   
+            _webHostEnvironment = webHostEnvironment;
+            _productRepository = productRepository;
+
         }
 
         // GET: api/Products
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         //{
-         // if (_context.Product == null)
-         // {
-            //  return NotFound();
-         // }
-           //  return await _context.Product.ToListAsync();
+        // if (_context.Product == null)
+        // {
+        //  return NotFound();
+        // }
+        //  return await _context.Product.ToListAsync();
         //}
 
         // GET: api/Products
-      //  [HttpGet("GetProduct")]
-      //  public async Task<List<Product>> GetProduct()
-      //  {
-            //var productlist = await this._context.GetProduct();
-           // if (productlist != null && productlist.Count > 0)
-          //  {
-           //     productlist.ForEach(item =>
-            //    {
-            //        item.productImage = GetImagebyProduct(item.Code);
-             //   });
-           // }
-         //   else
-         //   {
-         //       return new List<Product>();
-          //  }
-           // return productlist;
+        //  [HttpGet("GetProduct")]
+        //  public async Task<List<Product>> GetProduct()
+        //  {
+        //var productlist = await this._context.GetProduct();
+        // if (productlist != null && productlist.Count > 0)
+        //  {
+        //     productlist.ForEach(item =>
+        //    {
+        //        item.productImage = GetImagebyProduct(item.Code);
+        //   });
+        // }
+        //   else
+        //   {
+        //       return new List<Product>();
+        //  }
+        // return productlist;
         //}
 
         // GET: api/Products/5
@@ -166,9 +170,9 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
-       // public async Task<ActionResult<Product>> PostProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
+        // public async Task<ActionResult<Product>> PostProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
         //public IActionResult PostProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
-        [HttpPost("CreateProduct")]
+        /*[HttpPost("CreateProduct")]
         public IActionResult CreateProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
         {
           if (_context.Product == null)
@@ -187,7 +191,40 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             //await _context.SaveChangesAsync();
             return Ok("Add Product");
             //return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+        }*/
+
+        /*[HttpPost("Create")]
+        public async Task<IActionResult> Create([FromForm] Product product)
+        {
+            if (product.UploadFile != null && product.UploadFile.Length > 0)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(product.UploadFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads", fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await product.UploadFile.CopyToAsync(fileStream);
+                }
+                product.pic_1 = "/images/" + fileName;
+            }
+
+            _productRepository.Add(product);
+            await _productRepository.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetById(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return product;
+        }/*
+    }
+}
 
         // DELETE: api/Products/5
         /*[HttpDelete("{id}")]
@@ -209,9 +246,10 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             return NoContent();
         }*/
 
-        private bool ProductExists(int id)
-        {
-            return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        /* private bool ProductExists(int id)
+         {
+             return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
+         }
+     }*/
     }
 }
