@@ -3,7 +3,7 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 
 public class BasketService : IBasketService
 {
-    private readonly DbContextProject _context;
+   /* private readonly DbContextProject _context;
 
     public BasketService(DbContextProject context)
     {
@@ -25,5 +25,5 @@ public class BasketService : IBasketService
 
         basket.Products.Add(product);
         await _context.SaveChangesAsync();
-    }
+    }*/
 }

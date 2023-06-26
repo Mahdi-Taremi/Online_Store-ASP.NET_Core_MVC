@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Online_Store_ASP.NET_Core_MVC.Models;
 
@@ -11,9 +12,11 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     [DbContext(typeof(DbContextProject))]
-    partial class DbContextProjectModelSnapshot : ModelSnapshot
+    [Migration("20230626141443_NewProduct-15")]
+    partial class NewProduct15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

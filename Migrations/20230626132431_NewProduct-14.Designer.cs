@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Online_Store_ASP.NET_Core_MVC.Models;
 
@@ -11,9 +12,11 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     [DbContext(typeof(DbContextProject))]
-    partial class DbContextProjectModelSnapshot : ModelSnapshot
+    [Migration("20230626132431_NewProduct-14")]
+    partial class NewProduct14
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BasketProduct", b =>
+                {
+                    b.Property<int>("BasketId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdBasketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BasketId", "IdBasketId");
+
+                    b.HasIndex("IdBasketId");
+
+                    b.ToTable("BasketProduct");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -240,8 +258,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BasketId");
-
                     b.ToTable("Basket");
                 });
 
@@ -275,6 +291,21 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("BasketProduct", b =>
+                {
+                    b.HasOne("Online_Store_ASP.NET_Core_MVC.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Online_Store_ASP.NET_Core_MVC.Models.Basket", null)
+                        .WithMany()
+                        .HasForeignKey("IdBasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -326,20 +357,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Basket", b =>
-                {
-                    b.HasOne("Online_Store_ASP.NET_Core_MVC.Models.Product", null)
-                        .WithMany("IdBasket")
-                        .HasForeignKey("BasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Online_Store_ASP.NET_Core_MVC.Models.Product", b =>
-                {
-                    b.Navigation("IdBasket");
                 });
 #pragma warning restore 612, 618
         }
