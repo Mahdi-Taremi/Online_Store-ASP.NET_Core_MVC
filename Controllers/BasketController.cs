@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 using Online_Store_ASP.NET_Core_MVC.Models;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
@@ -68,11 +72,46 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
          
             if (product == null)
             {
-                return NotFound();
+                return NotFound("Product Not Found ! 404 ");
             }
-           // Basket basketdb = new Basket();
+
+
+            // Basket basketdb = new Basket();
             // Get the user's basket from the database or create a new one if it doesn't exist
-             var basket = await _context.Basket.FirstOrDefaultAsync(b => b.UserId == user.Id);
+
+
+
+            var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == id));
+
+
+           // var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == 4));
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == 4));
+
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == product.IdBasket));
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == product.IdBasket));
+
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id && b.BasketId == product.IdBasket);
+
+
+
+
+
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId.ToString() == (product.IdBasket).ToString()));
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == product.IdBasket));
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => b.UserId == user.Id);
+            //var basket = _context.Basket.Where(x => x.UserId == user.Id).SingleOrDefault();
+            //var basket = _context.Basket.Where(x => x.UserId == user.Id && x.BasketId == int.Parse(product.IdBasket)).SingleOrDefault();
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => b.UserId == user.Id);
+
+            //var basket = _context.Basket.SingleOrDefault(x => x.UserId == user.Id);
+            //var basket = await _context.Basket.SingleOrDefaultAsync(b => b.UserId == user.Id);
+            //var basket = await _context.Basket.Where(b => b.UserId == user.Id).SingleOrDefaultAsync();
+            //var basket =  _context.Basket.Where(b => b.UserId == user.Id).SingleOrDefault();
+            //var basket = await _context.Basket.FirstOrDefaultAsync(b => b.UserId == user.Id);
+
+            //var basket = _context.Basket.SingleOrDefault(x => x.UserId == user.Id);
+            //var basket = _context.Basket.SingleOrDefault(x => x.UserId == product.IdBasket);
+            //var basket = await _context.Basket.SingleOrDefaultAsync(b => b.UserId == user.Id);
             if (product.IdBasket != null)
             {
                 basket.Counter++;
