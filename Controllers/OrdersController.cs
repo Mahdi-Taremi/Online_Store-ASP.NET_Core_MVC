@@ -27,7 +27,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             return View(orders);
         }
 
-        // ایجاد سفارش جدید
         [HttpGet]
         public IActionResult Create()
         {
@@ -50,7 +49,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             return View(order);
         }
 
-        // حذف سفارش
         [HttpPost("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
