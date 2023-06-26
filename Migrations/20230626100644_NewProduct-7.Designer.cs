@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Online_Store_ASP.NET_Core_MVC.Models;
 
@@ -11,9 +12,11 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     [DbContext(typeof(DbContextProject))]
-    partial class DbContextProjectModelSnapshot : ModelSnapshot
+    [Migration("20230626100644_NewProduct-7")]
+    partial class NewProduct7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +30,12 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
                     b.Property<int>("BasketId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdBasketId")
+                    b.Property<int>("BasketIdId")
                         .HasColumnType("int");
 
-                    b.HasKey("BasketId", "IdBasketId");
+                    b.HasKey("BasketId", "BasketIdId");
 
-                    b.HasIndex("IdBasketId");
+                    b.HasIndex("BasketIdId");
 
                     b.ToTable("BasketProduct");
                 });
@@ -297,7 +300,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Migrations
 
                     b.HasOne("Online_Store_ASP.NET_Core_MVC.Models.Basket", null)
                         .WithMany()
-                        .HasForeignKey("IdBasketId")
+                        .HasForeignKey("BasketIdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
