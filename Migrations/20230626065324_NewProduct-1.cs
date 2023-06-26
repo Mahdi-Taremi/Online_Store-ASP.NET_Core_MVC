@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     /// <inheritdoc />
-    public partial class newProduct1 : Migration
+    public partial class NewProduct1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

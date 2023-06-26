@@ -8,7 +8,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
     public class OrdersController : Controller
     {
 
-        private readonly DbContextProject _context;
+        /*private readonly DbContextProject _context;
         private readonly UserManager<IdentityUser> _userManager;
 
         public OrdersController(DbContextProject context, UserManager<IdentityUser> userManager)
@@ -57,8 +57,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
+        }*/
     }
-
 
 }

@@ -12,8 +12,8 @@ using Online_Store_ASP.NET_Core_MVC.Models;
 namespace Online_Store_ASP.NET_Core_MVC.Migrations
 {
     [DbContext(typeof(DbContextProject))]
-    [Migration("20230623152300_newProduct2")]
-    partial class newProduct2
+    [Migration("20230626065324_NewProduct-1")]
+    partial class NewProduct1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
