@@ -47,9 +47,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             _context.Product.Add(f);
             _context.SaveChanges();
 
-            //await _context.SaveChangesAsync();
             return Ok("Add Product");
-            //return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
 
@@ -98,15 +96,25 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             }
         }
 
+        [HttpGet("Show")]
+        [Authorize(Roles = UsersRoles.ADMIN)]
+        public string Show(int Id)
+        {
+            var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
 
+            return ("Product Name : " + query.Name + " " +  " and Price : " + query.Price);
+        }
 
-
-
-
+        /*[HttpGet("ShowAll")]
+        public string ShowAll()
+        {
+            var query = _context.Product.ToList().OrderByDescending(x => x.Id);
+            return query;
+        }*/
 
 
         // POST: CreateProductsController/Edit/5
-        [HttpPost]
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
@@ -118,6 +126,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             {
                 return View();
             }
-        }
+        }*/
     }
 }
