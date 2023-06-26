@@ -17,19 +17,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             _context = context;
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //try
-        //{
-        //    return RedirectToAction(nameof(Index));
-        // }
-        // catch
-        // {
-        //  return View();
-        // }
-        // }
         [HttpPost("CreateProduct")]
         [Authorize(Roles = UsersRoles.ADMIN)]
         public IActionResult CreateProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
@@ -62,20 +49,11 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             _context.SaveChanges();
             return Ok("Delete Product");
 
-            /* try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-            */
         }
 
         // Test
         //[ValidateAntiForgeryToken]
-        [HttpPost("BuyProduct")]
+        /*[HttpPost("BuyProduct")]
         [Authorize(Roles = UsersRoles.USER)]
         public string BuyProduct(int id)
         {
@@ -94,7 +72,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
                 var bCount = _context.Basket.Count();
                 return "Successfull Add product to Basket" + " " + pCount.ToString() + " " + "and Count Basket" + " " + bCount.ToString();
             }
-        }
+        }*/
 
         [HttpGet("Show")]
         [Authorize(Roles = UsersRoles.ADMIN)]
@@ -104,28 +82,5 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
 
             return ("Product Name : " + query.Name + " " +  " and Price : " + query.Price);
         }
-
-        /*[HttpGet("ShowAll")]
-        public string ShowAll()
-        {
-            var query = _context.Product.ToList().OrderByDescending(x => x.Id);
-            return query;
-        }*/
-
-
-        // POST: CreateProductsController/Edit/5
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }*/
     }
 }
