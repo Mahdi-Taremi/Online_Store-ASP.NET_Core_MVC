@@ -10,6 +10,25 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
+        #region TestRequestLoggingMiddleware
+        // Test 1 
+        [HttpGet]
+        [Route("GetNumberAsync")]
+        public async Task<int> GetNumberAsync()
+        {
+            await Task.Delay(2000);
+            return 42;
+        }
+        // Test 2 
+        [HttpGet]
+        [Route("Getinfo")]
+        public async Task<IActionResult> Getinfo()
+        {
+            await Task.Delay(1500);
+            return Ok("Hello");
+        }
+        #endregion
+
         // GET: api/<TestController>
         [HttpGet]
         [Route("Get")]
@@ -53,21 +72,21 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }*/
 
         // POST api/<TestController>
-       /* [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }*/
+        /* [HttpPost]
+         public void Post([FromBody] string value)
+         {
+         }*/
 
         // PUT api/<TestController>/5
-       /* [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }*/
+        /* [HttpPut("{id}")]
+         public void Put(int id, [FromBody] string value)
+         {
+         }*/
 
         // DELETE api/<TestController>/5
-       /* [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
+        /* [HttpDelete("{id}")]
+         public void Delete(int id)
+         {
+         }*/
     }
 }

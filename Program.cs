@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Online_Store_ASP.NET_Core_MVC.Middleware;
 using Online_Store_ASP.NET_Core_MVC.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
@@ -37,8 +38,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 // Add Auth and Jwt
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; 
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
     .AddJwtBearer(options =>
@@ -100,6 +101,11 @@ app.UseAuthorization();
 
 // 3. Add Swagger 
 app.UseSwagger(x => x.SerializeAsV2 = true);
+
+// 1 Way : Whenever Don't Use Extension Method for RequestLoggingMiddleware
+//app.UseMiddleware<RequestLoggingMiddleware>();
+// 2 Way : Use Extension Method for RequestLoggingMiddleware
+app.UseRequestLogging();
 
 app.MapControllerRoute(
     name: "default",
