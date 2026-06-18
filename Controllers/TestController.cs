@@ -10,6 +10,13 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
+        //private readonly ILogger<TestController> _logger;
+      //  public TestController(
+      //ILogger<TestController> logger)
+      //  {
+      //      _logger = logger;
+      //  }
+
         #region TestRequestLoggingMiddleware
         // Test 1 
         [HttpGet]
@@ -26,6 +33,57 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         {
             await Task.Delay(1500);
             return Ok("Hello");
+        }
+        #endregion
+
+        #region _logger/Serilog 
+        [HttpGet]
+        [Route("GetSerilog")]
+        public IActionResult GetSerilog()
+        {
+            //_logger.LogInformation(
+            //    "Product {ProductId}",
+            //     3);
+            //_logger.LogInformation(
+            //    "Test endpoint called (Serilog)");
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("GetSerilogWarning")]
+        public IActionResult GetSerilogWarning()
+        {
+            //int stock = 3;
+            //if (stock < 5)
+            //{
+            //    _logger.LogWarning(
+            //        "Product ProductId stock is low. Remaining: {Stock}",
+                    
+            //        stock);
+            //}
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("GetSerilogError")]
+        public IActionResult GetSerilogError()
+        {
+            //try
+            //{
+            //    throw new Exception("Database Connection Failed");
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(
+            //        ex,
+            //        "Error occurred while reading products");
+            //    _logger.LogCritical(
+            //        "Payment Gateway is unavailable");
+            //    return StatusCode(500);
+            //}
+            return Ok();
+
         }
         #endregion
 

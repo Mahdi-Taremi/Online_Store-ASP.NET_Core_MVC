@@ -8,8 +8,26 @@ using Online_Store_ASP.NET_Core_MVC.Middleware;
 using Online_Store_ASP.NET_Core_MVC.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using Serilog;
+
+//Serilog - HardCode
+//Log.Logger =
+//    new LoggerConfiguration()
+//        .WriteTo.Console()
+//        .WriteTo.File("Logs/log.txt")
+//        .WriteTo.Seq(
+//            "http://localhost:5341")
+//        .CreateLogger();
+
+//1. Add Serilog 
+Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+//2. Add Serilog 
+builder.Host.UseSerilog((context, services, configuration) => { configuration.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services).Enrich.FromLogContext(); });
+//Serilog - HardCode
+//builder.Host.UseSerilog();
 
 // Connect to Sql Server (ConnectionStrings) :
 // 1 Way : ConnectionStrings
