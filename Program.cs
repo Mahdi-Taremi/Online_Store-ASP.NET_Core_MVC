@@ -24,6 +24,22 @@ Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<
+    IProductRepository,
+    ProductsController>();
+
+// 1. Add RedisCache
+builder.Services
+    .AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration =
+            builder.Configuration
+                .GetConnectionString("Redis");
+
+        options.InstanceName =
+            "RedisDemo:";
+    });
+
 //2. Add Serilog 
 builder.Host.UseSerilog((context, services, configuration) => { configuration.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services).Enrich.FromLogContext(); });
 //Serilog - HardCode
@@ -91,6 +107,7 @@ builder.Services.AddSwaggerGen(option =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
