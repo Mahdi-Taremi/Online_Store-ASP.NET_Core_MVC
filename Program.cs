@@ -46,9 +46,7 @@ builder.Host.UseSerilog((context, services, configuration) => { configuration.Re
 //builder.Host.UseSerilog();
 
 // Connect to Sql Server (ConnectionStrings) :
-// 1 Way : ConnectionStrings
-// builder.Services.AddDbContext<DbContextProject>(x => x.UseSqlServer("Server=.;Database=Online_Store-ASP.NET_Core_MVC;User Id=MahdiTaremi;Password=12;TrustServerCertificate=True;"));
-// 2 Way : ConnectionStrings
+// ConnectionStrings
 builder.Services.AddDbContext<DbContextProject>(options =>
 {
     var ConnectionStrings = builder.Configuration.GetConnectionString("Local");
@@ -63,10 +61,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 // Config Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 3;
-    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = true;
 });
 
 // Add Auth and Jwt
@@ -114,8 +113,11 @@ var app = builder.Build();
 // Add the repository as a service.
 //builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// 2. Add Swagger 
-app.UseSwaggerUI();
+// 2. Add Swagger (only in Development)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwaggerUI();
+}
 
 
 // Configure the HTTP request pipeline.
@@ -134,8 +136,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 3. Add Swagger 
-app.UseSwagger(x => x.SerializeAsV2 = true);
+// 3. Add Swagger (only in Development)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger(x => x.SerializeAsV2 = true);
+}
 
 // 1 Way : Whenever Don't Use Extension Method for RequestLoggingMiddleware
 //app.UseMiddleware<RequestLoggingMiddleware>();
