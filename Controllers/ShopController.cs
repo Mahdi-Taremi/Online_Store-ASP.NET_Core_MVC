@@ -35,14 +35,26 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             {
                 return Problem("DbContextProject.Product is null.");
             }
-            var FilePath = Path.Combine(env.WebRootPath, "Uploads", f.UploadFile.FileName);
-            using (var img = System.IO.File.Create(FilePath))
+            if (f.UploadFile == null || f.UploadFile.Length == 0)
             {
-                f.UploadFile.CopyTo(img);
+                return BadRequest("No file was uploaded.");
             }
-            f.pic_1 = f.UploadFile.FileName;
-            _context.Product.Add(f);
-            _context.SaveChanges();
+            try
+            {
+                var FilePath = Path.Combine(env.WebRootPath, "Uploads", f.UploadFile.FileName);
+                using (var img = System.IO.File.Create(FilePath))
+                {
+                    f.UploadFile.CopyTo(img);
+                }
+                f.pic_1 = f.UploadFile.FileName;
+                _context.Product.Add(f);
+                _context.SaveChanges();
+            }
+            catch (IOException ex)
+            {
+                _logger.LogError(ex, "Failed to save uploaded file for product {ProductName}", f.Name);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to save the uploaded file.");
+            }
 
             return Ok("Add Product");
         }
@@ -55,6 +67,10 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
             var query = _context.Product.Where(x => x.Id == id).SingleOrDefault();
+            if (query == null)
+            {
+                return NotFound($"Product with Id {id} not found.");
+            }
             _context.Product.Remove(query);
             _context.SaveChanges();
             return Ok("Delete Product");
@@ -86,17 +102,25 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
 
         [HttpGet("Show")]
         [Authorize(Roles = UsersRoles.ADMIN)]
-        public string Show(int Id)
+        public IActionResult Show(int Id)
         {
             var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
+            if (query == null)
+            {
+                return NotFound($"Product with Id {Id} not found.");
+            }
 
-            return ("Product Name : " + query.Name + " " + " and Price : " + query.Price);
+            return Ok("Product Name : " + query.Name + " " + " and Price : " + query.Price);
         }
 
         [HttpGet("ShowWithoutRedis")]
         public async Task<IActionResult> ShowWithoutRedis(int Id)
         {
             var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
+            if (query == null)
+            {
+                return NotFound($"Product with Id {Id} not found.");
+            }
              await Task.Delay(3000);
             return Ok(query.ToJson());
         }
@@ -105,6 +129,10 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         public async Task<IActionResult> Get(int Id)
         {
             var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
+            if (query == null)
+            {
+                return NotFound($"Product with Id {Id} not found.");
+            }
             string cacheKey =
                 $"product:{Id}";
 

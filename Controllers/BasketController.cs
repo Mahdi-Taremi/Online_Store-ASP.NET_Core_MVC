@@ -32,10 +32,14 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
 
             if (_userManager.Users == null)
             {
-                return BadRequest("!!!!!!!!!!");
+                return BadRequest("User store is not available.");
             }
             // Get the currently logged in user
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized("Unable to identify the current user.");
+            }
             var UserNamee =  user.UserName;
             var Email =  user.Email;
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -48,12 +52,16 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
                 return NotFound("Product Not Found ! 404 ");
             }
             var basket = await _context.Basket.FirstOrDefaultAsync(b => (b.UserId == user.Id) && (b.BasketId == id));
-            if (product.IdBasket != null)
+            if (product.IdBasket != null && product.IdBasket.Count > 0)
             {
+                if (basket == null)
+                {
+                    return NotFound("Basket entry not found for this product.");
+                }
                 basket.Counter++;
                 await _context.SaveChangesAsync();
 
-            } else if (product.IdBasket == null)
+            } else
             {
                 Basket basketdb = new Basket();
 
