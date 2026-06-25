@@ -37,13 +37,31 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             {
                 return Ok("Set Role, It has already been Done");
             }
-            else
+
+            var errors = new List<string>();
+            if (!isUSERRole)
             {
-            await _roleManager.CreateAsync(new IdentityRole(UsersRoles.USER));
-            await _roleManager.CreateAsync(new IdentityRole(UsersRoles.ADMIN));
-            await _roleManager.CreateAsync(new IdentityRole(UsersRoles.OWNER));
-                return Ok("Successfull, Set Role");
+                var result = await _roleManager.CreateAsync(new IdentityRole(UsersRoles.USER));
+                if (!result.Succeeded)
+                    errors.AddRange(result.Errors.Select(e => e.Description));
             }
+            if (!isADMINRole)
+            {
+                var result = await _roleManager.CreateAsync(new IdentityRole(UsersRoles.ADMIN));
+                if (!result.Succeeded)
+                    errors.AddRange(result.Errors.Select(e => e.Description));
+            }
+            if (!isOWNERRole)
+            {
+                var result = await _roleManager.CreateAsync(new IdentityRole(UsersRoles.OWNER));
+                if (!result.Succeeded)
+                    errors.AddRange(result.Errors.Select(e => e.Description));
+            }
+            if (errors.Count > 0)
+            {
+                return BadRequest("Failed to create some roles: " + string.Join("; ", errors));
+            }
+            return Ok("Successfull, Set Role");
         }
 
         [HttpPost]
@@ -71,7 +89,12 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
                 }
                 return BadRequest(Error);
             }
-            await _userManager.AddToRoleAsync(newUser, UsersRoles.USER);
+            var roleResult = await _userManager.AddToRoleAsync(newUser, UsersRoles.USER);
+            if (!roleResult.Succeeded)
+            {
+                var roleErrors = string.Join("; ", roleResult.Errors.Select(e => e.Description));
+                return StatusCode(StatusCodes.Status500InternalServerError, "User created but failed to assign role: " + roleErrors);
+            }
             return Ok("Successfull, User Created");
         }
 
@@ -106,7 +129,9 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }
         private string GenerateNewJsonWebToken(List<Claim> claims)
         {
-            var authSecret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Token"]));
+            var jwtKey = _configuration["Jwt:Token"]
+                ?? throw new InvalidOperationException("JWT signing key (Jwt:Token) is not configured.");
+            var authSecret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var tokenObject = new JwtSecurityToken(
                 issuer: _configuration["Jwt:ValidateIssuer"],
                 audience: _configuration["Jwt:ValidateAudience"],
@@ -128,7 +153,12 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             {
                 return BadRequest("Invalid UserName ");
             }
-            await _userManager.AddToRoleAsync(user, UsersRoles.ADMIN);
+            var roleResult = await _userManager.AddToRoleAsync(user, UsersRoles.ADMIN);
+            if (!roleResult.Succeeded)
+            {
+                var roleErrors = string.Join("; ", roleResult.Errors.Select(e => e.Description));
+                return BadRequest("Failed to assign admin role: " + roleErrors);
+            }
             return Ok("Successful");    
         }
           
