@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Online_Store_ASP.NET_Core_MVC.Controllers;
 
 namespace Online_Store_ASP.NET_Core_MVC.Models
 {

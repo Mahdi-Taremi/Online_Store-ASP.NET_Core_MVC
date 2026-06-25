@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Online_Store_ASP.NET_Core_MVC.Middleware;
 using Online_Store_ASP.NET_Core_MVC.Models;
+using Online_Store_ASP.NET_Core_MVC.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using Serilog;
@@ -26,7 +27,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<
     IProductRepository,
-    ProductsController>();
+    ProductRepositoryImpl>();
+builder.Services.AddScoped<
+    IFileUploadService,
+    FileUploadService>();
 
 // 1. Add RedisCache
 builder.Services

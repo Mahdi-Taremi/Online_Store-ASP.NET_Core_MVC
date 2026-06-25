@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Writers;
 using Online_Store_ASP.NET_Core_MVC.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,6 +21,11 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             _userManager = userManager;
             _roleManager = roleManager;  
             _configuration = configuration;
+        }
+
+        private async Task<IdentityUser?> FindUserByNameAsync(string userName)
+        {
+            return await _userManager.FindByNameAsync(userName);
         }
 
         // Send User Role to DbContextProject
@@ -50,7 +53,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            var isExistUser = await _userManager.FindByNameAsync(registerDto.UserName);
+            var isExistUser = await FindUserByNameAsync(registerDto.UserName);
             if (isExistUser != null) {
             return BadRequest("Username already exists " + ": " + isExistUser.ToString());
             }
@@ -79,7 +82,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var user = await _userManager.FindByNameAsync(loginDto.UserName);
+            var user = await FindUserByNameAsync(loginDto.UserName);
             if (user is null) {
                 return Unauthorized("Invalid Creden");
             }
@@ -123,7 +126,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [Route("set-role-admin")]
         public async Task<IActionResult> SetRoleAdmin([FromBody] UpdateRoleDto updateRoleDto)
         {
-            var user = await _userManager.FindByNameAsync(updateRoleDto.UserName);
+            var user = await FindUserByNameAsync(updateRoleDto.UserName);
             if (user is null)
             {
                 return BadRequest("Invalid UserName ");
