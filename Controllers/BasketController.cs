@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging.Signing;
 using Online_Store_ASP.NET_Core_MVC.Models;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics.Metrics;
+using Online_Store_ASP.NET_Core_MVC.Services;
 using System.Security.Claims;
 
 namespace Online_Store_ASP.NET_Core_MVC.Controllers
@@ -19,10 +13,12 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly DbContextProject _context;
-        public BasketController(UserManager<IdentityUser> userManager, DbContextProject context)
+        private readonly IProductRepository _productRepository;
+        public BasketController(UserManager<IdentityUser> userManager, DbContextProject context, IProductRepository productRepository)
         {
             _userManager = userManager;
             _context = context;
+            _productRepository = productRepository;
         }
 
         [HttpPost("AddToBasket")]
@@ -41,7 +37,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Get the product from the database
-             var product = await _context.Product.FindAsync(id);
+            var product = await _productRepository.GetByIdAsync(id);
          
             if (product == null)
             {
@@ -68,4 +64,3 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }
     }
 }
-

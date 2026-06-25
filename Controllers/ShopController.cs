@@ -1,48 +1,35 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using NuGet.Protocol;
-using NuGet.Protocol.Core.Types;
 using Online_Store_ASP.NET_Core_MVC.Models;
 using Online_Store_ASP.NET_Core_MVC.Services;
-using System.Data;
 using System.Text.Json;
-//using Microsoft.Extensions.Caching.Distributed;
 
 namespace Online_Store_ASP.NET_Core_MVC.Controllers
 {
 
     public class ShopController : Controller
     {
-        private readonly DbContextProject _context;
+        private readonly IProductRepository _productRepository;
+        private readonly IFileUploadService _fileUploadService;
         private readonly IDistributedCache _cache;
         private readonly ILogger<ProductsController> _logger;
-        public ShopController(DbContextProject context, IDistributedCache cache, ILogger<ProductsController> logger)
+        public ShopController(IProductRepository productRepository, IFileUploadService fileUploadService, IDistributedCache cache, ILogger<ProductsController> logger)
         {
-            _context = context;
+            _productRepository = productRepository;
+            _fileUploadService = fileUploadService;
             _cache = cache;
             _logger = logger;
         }
 
         [HttpPost("CreateProduct")]
         [Authorize(Roles = UsersRoles.ADMIN)]
-        public IActionResult CreateProduct(Models.Product f, [FromServices] IWebHostEnvironment env)
+        public IActionResult CreateProduct(Models.Product f)
         {
-            if (_context.Product == null)
-            {
-                return Problem("DbContextProject.Product is null.");
-            }
-            var FilePath = Path.Combine(env.WebRootPath, "Uploads", f.UploadFile.FileName);
-            using (var img = System.IO.File.Create(FilePath))
-            {
-                f.UploadFile.CopyTo(img);
-            }
-            f.pic_1 = f.UploadFile.FileName;
-            _context.Product.Add(f);
-            _context.SaveChanges();
+            f.pic_1 = _fileUploadService.Upload(f.UploadFile, "Uploads");
+            _productRepository.Add(f);
+            _productRepository.SaveChanges();
 
             return Ok("Add Product");
         }
@@ -54,9 +41,9 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [Authorize(Roles = UsersRoles.ADMIN)]
         public ActionResult Delete(int id, IFormCollection collection)
         {
-            var query = _context.Product.Where(x => x.Id == id).SingleOrDefault();
-            _context.Product.Remove(query);
-            _context.SaveChanges();
+            var query = _productRepository.GetById(id);
+            _productRepository.Remove(query);
+            _productRepository.SaveChanges();
             return Ok("Delete Product");
 
         }
@@ -67,7 +54,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [Authorize(Roles = UsersRoles.USER)]
         public string BuyProduct(int id)
         {
-            var query = _context.Product.Where(x => x.Id == id).SingleOrDefault();
+            var query = _productRepository.GetById(id);
             if (query == null)
             {
                 return "UnSuccessfull Add To Basket";
@@ -88,7 +75,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [Authorize(Roles = UsersRoles.ADMIN)]
         public string Show(int Id)
         {
-            var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
+            var query = _productRepository.GetById(Id);
 
             return ("Product Name : " + query.Name + " " + " and Price : " + query.Price);
         }
@@ -96,7 +83,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [HttpGet("ShowWithoutRedis")]
         public async Task<IActionResult> ShowWithoutRedis(int Id)
         {
-            var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
+            var query = _productRepository.GetById(Id);
              await Task.Delay(3000);
             return Ok(query.ToJson());
         }
@@ -104,7 +91,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         [HttpGet("ShowWithRedis")]
         public async Task<IActionResult> Get(int Id)
         {
-            var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
+            var query = _productRepository.GetById(Id);
             string cacheKey =
                 $"product:{Id}";
 
@@ -119,10 +106,6 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
                     "Redis Cache Hit {ProductId}",
                     Id);
 
-                //var product =
-                //    JsonSerializer.Deserialize<Product>(
-                //        cachedProduct);
-
                 return Ok(query.ToJson());
             }
 
@@ -132,15 +115,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
 
             await Task.Delay(3000);
 
-            //var Name = query.Name;
-            //var Price = query.Price;
             var productFromDb = query.ToJson();
-                //new Product
-                //{
-                //    Id = Id,
-                //    Name = Name,
-                //    Price = Price
-                //};
 
             string json =
                 JsonSerializer.Serialize(
