@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         // Send User Role to DbContextProject
         [HttpPost]
         [Route("Set-roles")]
+        [Authorize(Roles = UsersRoles.OWNER)]
         public async Task<IActionResult> SetRoles()
         {
             bool isUSERRole = await _roleManager.RoleExistsAsync(UsersRoles.USER);
@@ -52,7 +54,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         {
             var isExistUser = await _userManager.FindByNameAsync(registerDto.UserName);
             if (isExistUser != null) {
-            return BadRequest("Username already exists " + ": " + isExistUser.ToString());
+            return BadRequest("Username already exists.");
             }
             IdentityUser newUser = new IdentityUser()
             {
@@ -81,12 +83,12 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         {
             var user = await _userManager.FindByNameAsync(loginDto.UserName);
             if (user is null) {
-                return Unauthorized("Invalid Creden");
+                return Unauthorized("Invalid username or password.");
             }
             var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if(!isPasswordCorrect)
             {
-                return Unauthorized("Invalid Password");
+                return Unauthorized("Invalid username or password.");
             }
             var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -121,6 +123,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
 
         [HttpPost]
         [Route("set-role-admin")]
+        [Authorize(Roles = UsersRoles.OWNER)]
         public async Task<IActionResult> SetRoleAdmin([FromBody] UpdateRoleDto updateRoleDto)
         {
             var user = await _userManager.FindByNameAsync(updateRoleDto.UserName);

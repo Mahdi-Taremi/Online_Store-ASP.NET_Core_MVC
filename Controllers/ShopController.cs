@@ -35,7 +35,8 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
             {
                 return Problem("DbContextProject.Product is null.");
             }
-            var FilePath = Path.Combine(env.WebRootPath, "Uploads", f.UploadFile.FileName);
+            var safeFileName = Path.GetFileName(f.UploadFile.FileName);
+            var FilePath = Path.Combine(env.WebRootPath, "Uploads", safeFileName);
             using (var img = System.IO.File.Create(FilePath))
             {
                 f.UploadFile.CopyTo(img);
@@ -94,6 +95,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }
 
         [HttpGet("ShowWithoutRedis")]
+        [Authorize]
         public async Task<IActionResult> ShowWithoutRedis(int Id)
         {
             var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
@@ -102,6 +104,7 @@ namespace Online_Store_ASP.NET_Core_MVC.Controllers
         }
 
         [HttpGet("ShowWithRedis")]
+        [Authorize]
         public async Task<IActionResult> Get(int Id)
         {
             var query = _context.Product.Where(x => x.Id == Id).SingleOrDefault();
